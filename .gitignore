@@ -1,0 +1,41 @@
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Helm chart build output
+charts/
+
+# Helm release files
+release.yaml
+
+# Helm test and snapshot output
+__snapshot__/
+
+# VSCode and editor files
+*.code-workspace
+
+# OS and editor junk
+.DS_Store
+*.swp
+*.swo
+
+# Python virtualenv (if used for hooks)
+.venv/
+venv/
+
+# Node modules (if used for hooks)
+node_modules/
+
+# Pre-commit cache
+.pre-commit-cache/
+
+# Ignore test output
+*.out
+*.log
+
+# Ignore local values files
+values.local.yaml
+output.yaml
+out.yaml
