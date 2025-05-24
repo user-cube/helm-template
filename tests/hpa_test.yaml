@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: test-hpa
+templates:
+  - templates/hpa.yaml
+
+values:
+  - ../src/values.yaml
+
+tests:
+  - it: should render an HPA with correct values
+    set:
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 3
+        targetCPUUtilizationPercentage: 50
+        targetMemoryUtilizationPercentage: 60
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - equal:
+          path: spec.minReplicas
+          value: 1
+      - equal:
+          path: spec.maxReplicas
+          value: 3
+      - equal:
+          path: spec.metrics[0].resource.target.averageUtilization
+          value: 50
+      - equal:
+          path: spec.metrics[1].resource.target.averageUtilization
+          value: 60

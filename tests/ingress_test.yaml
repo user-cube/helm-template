@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: test-ingress
+templates:
+  - templates/ingress.yaml
+
+values:
+  - ../src/values.yaml
+
+tests:
+  - it: should render an Ingress with correct values
+    set:
+      ingress:
+        enabled: true
+        hosts:
+          - host: example.com
+            paths:
+              - path: /
+                pathType: Prefix
+        className: nginx
+      service:
+        port: 80
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.rules[0].host
+          value: example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 80
