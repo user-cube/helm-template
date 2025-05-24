@@ -64,3 +64,17 @@ Execute the following command:
 ```bash
 helm unittest src -f '../tests/**/*.yaml' -f '../tests/**/*.yml'
 ```
+
+## Docs
+
+## Setup
+
+```bash
+brew install helm-docs
+```
+
+## Generate docs
+
+```bash
+helm-docs src
+```
