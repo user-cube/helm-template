@@ -1,0 +1,40 @@
+repos:
+# Prettier: YAML formatting for known safe files
+- repo: https://github.com/pre-commit/mirrors-prettier
+  rev: v3.0.0
+  hooks:
+  - id: prettier
+    additional_dependencies: [ "prettier@3.0.0" ]
+    files: |
+      ^src/Chart\.ya?ml$
+      ^src/values\.ya?ml$
+      ^tests/.+\.ya?ml$
+
+# Helm lint: validate the Helm chart in src/
+- repo: local
+  hooks:
+  - id: helm-lint
+    name: helm lint
+    entry: helm lint src/ -f src/values.yaml
+    language: system
+    pass_filenames: false
+
+# yamllint: structural YAML checks
+- repo: https://github.com/adrienverge/yamllint
+  rev: v1.32.0
+  hooks:
+  - id: yamllint
+    files: |
+      ^src/values\.ya?ml$
+      ^src/Chart\.ya?ml$
+      ^tests/.+\.ya?ml$
+
+# kubeconform: validate rendered chart manifests (core + optional CRDs)
+- repo: local
+  hooks:
+  - id: kubeconform
+    name: kubeconform validate rendered chart
+    entry: >
+      bash -c 'helm template ./src -f src/values.yaml | kubeconform -strict -verbose -ignore-missing-schemas -schema-location default -schema-location https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+    language: system
+    pass_filenames: false
